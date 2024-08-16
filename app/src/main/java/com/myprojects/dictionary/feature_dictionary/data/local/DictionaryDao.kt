@@ -11,7 +11,7 @@ import com.myprojects.dictionary.feature_dictionary.data.local.entitiy.WordInfoE
 interface DictionaryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWordInfo(wordInfos: List<WordInfoEntity>)
+    suspend fun insertWordInfos(wordInfos: List<WordInfoEntity>)
 
     @Query("Delete from wordinfoentity where word IN(:words)")
     suspend fun deleteWords(words: List<String>)
