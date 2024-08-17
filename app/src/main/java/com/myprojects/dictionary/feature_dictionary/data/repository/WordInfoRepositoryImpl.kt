@@ -44,6 +44,5 @@ class WordInfoRepositoryImpl(
 
         val newWordInfo = wordInfoDao.getWordInfo(word).map { it.toWordInfo() }
         emit(Resource.Success(data = newWordInfo))
-
     }
 }
