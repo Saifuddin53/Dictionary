@@ -2,17 +2,16 @@ package com.myprojects.dictionary.feature_dictionary.data.repository
 
 import com.myprojects.dictionary.core.util.Resource
 import com.myprojects.dictionary.feature_dictionary.data.local.WordInfoDao
-import com.myprojects.dictionary.feature_dictionary.data.remote.DictionaryApi
+import com.myprojects.dictionary.feature_dictionary.data.remote.WordInfoApi
 import com.myprojects.dictionary.feature_dictionary.domain.model.WordInfo
 import com.myprojects.dictionary.feature_dictionary.domain.repository.WordInfoRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
 import okio.IOException
 import retrofit2.HttpException
 
 class WordInfoRepositoryImpl(
-    private val dictionaryApi: DictionaryApi,
+    private val wordInfoApi: WordInfoApi,
     private val wordInfoDao: WordInfoDao
 ): WordInfoRepository {
 
@@ -23,7 +22,7 @@ class WordInfoRepositoryImpl(
         emit(Resource.Loading(data = wordInfoLocal))
 
         try {
-            val newWordInfo = dictionaryApi.getWordInfoDto(word)
+            val newWordInfo = wordInfoApi.getWordInfoDto(word)
             wordInfoDao.deleteWords(newWordInfo.map { it.word })
             wordInfoDao.insertWordInfos(newWordInfo.map { it.toWordInfoEntity() })
         } catch (e: HttpException) {
