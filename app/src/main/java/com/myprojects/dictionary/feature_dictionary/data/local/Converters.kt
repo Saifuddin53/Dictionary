@@ -1,17 +1,17 @@
 package com.myprojects.dictionary.feature_dictionary.data.local
 
 import androidx.room.ProvidedTypeConverter
+import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.reflect.TypeToken
 import com.myprojects.dictionary.feature_dictionary.data.local.util.JsonParser
 import com.myprojects.dictionary.feature_dictionary.domain.model.Meaning
 
 @ProvidedTypeConverter
-class Converters (
+class Converters(
     private val jsonParser: JsonParser
-){
-
-    @TypeConverters
+) {
+    @TypeConverter
     fun fromMeaningsJson(json: String): List<Meaning> {
         return jsonParser.fromJson<ArrayList<Meaning>>(
             json,
@@ -19,12 +19,11 @@ class Converters (
         ) ?: emptyList()
     }
 
-    @TypeConverters
+    @TypeConverter
     fun toMeaningsJson(meanings: List<Meaning>): String {
         return jsonParser.toJson(
             meanings,
             object : TypeToken<ArrayList<Meaning>>(){}.type
         ) ?: "[]"
     }
-
 }

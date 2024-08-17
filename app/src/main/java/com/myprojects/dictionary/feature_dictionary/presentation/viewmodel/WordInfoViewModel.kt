@@ -1,32 +1,30 @@
 package com.myprojects.dictionary.feature_dictionary.presentation.viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myprojects.dictionary.core.util.Resource
-import com.myprojects.dictionary.feature_dictionary.domain.model.WordInfo
 import com.myprojects.dictionary.feature_dictionary.domain.use_case.GetWordInfoUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class WordInfoViewModel @Inject constructor (
     private val getWordInfoUseCase: GetWordInfoUseCase
 ): ViewModel() {
 
     private val _state = mutableStateOf(WordInfoState())
-    val state = _state.value
+    val state = _state
 
     private val _searchQuery = mutableStateOf("")
-    val searchQuery = _searchQuery.value
+    val searchQuery = _searchQuery
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -44,24 +42,24 @@ class WordInfoViewModel @Inject constructor (
                         when(state) {
                             is Resource.Success -> {
                                 _state.value = _state.value.copy(
-                                    wordInfo = state.data ?: emptyList(),
+                                    wordInfoItems = state.data ?: emptyList(),
                                     isLoading = false
                                 )
                             }
                             is Resource.Error -> {
                                 _state.value = _state.value.copy(
-                                    wordInfo = state.data ?: emptyList(),
+                                    wordInfoItems = state.data ?: emptyList(),
                                     isLoading = false
                                 )
                                 _eventFlow.emit(
-                                    UIEvent.showSnackBar(
+                                    UIEvent.ShowSnackBar(
                                         message = state.message ?: "Unknown error"
                                     )
                                 )
                             }
                             is Resource.Loading -> {
                                 _state.value = _state.value.copy(
-                                    wordInfo = state.data ?: emptyList(),
+                                    wordInfoItems = state.data ?: emptyList(),
                                     isLoading = true
                                 )
                             }
@@ -71,6 +69,6 @@ class WordInfoViewModel @Inject constructor (
     }
 
     sealed class UIEvent() {
-        class showSnackBar(val message: String): UIEvent()
+        class ShowSnackBar(val message: String): UIEvent()
     }
 }
