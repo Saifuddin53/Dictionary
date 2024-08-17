@@ -8,7 +8,7 @@ import com.myprojects.dictionary.feature_dictionary.data.local.entitiy.WordInfoE
 
 
 @Dao
-interface DictionaryDao {
+interface WordInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWordInfos(wordInfos: List<WordInfoEntity>)
